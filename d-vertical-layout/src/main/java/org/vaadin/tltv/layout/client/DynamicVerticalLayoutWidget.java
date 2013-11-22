@@ -80,7 +80,7 @@ public class DynamicVerticalLayoutWidget extends VVerticalLayout {
         }
         getLayoutManager().removeElementResizeListener(slot.getElement(),
                 elResizeListener);
-        clearMinWidth(slot.getElement());
+        clearMinHeight(slot.getElement());
     }
 
     public void clearDynamicMinHeights() {
@@ -89,7 +89,7 @@ public class DynamicVerticalLayoutWidget extends VVerticalLayout {
         }
     }
 
-    private void clearMinWidth(Element element) {
+    private void clearMinHeight(Element element) {
         if (element == null) {
             return;
         }
