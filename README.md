@@ -20,12 +20,12 @@ Works with Vaadin 7.x. Tested up to Vaadin 7.1.8.
  
 ## Building and running demo
 
-git clone <url of the DynamicVerticalLayout repository>
-mvn clean install
-cd demo
-mvn jetty:run
+* git clone <url of the DynamicVerticalLayout repository>
+* mvn clean install
+* cd demo
+* mvn jetty:run
 
-To see the demo, navigate to http://localhost:8080/
+To see the demo, navigate to http://localhost:8080/d-vertical-layout-demo
 
 
 
