@@ -1,9 +1,11 @@
 package org.vaadin.tltv.layout.demo;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.apache.commons.io.IOUtils;
 import org.vaadin.tltv.layout.DynamicVerticalLayout;
 
 import com.vaadin.annotations.Theme;
@@ -50,11 +52,21 @@ import com.vaadin.ui.Window;
 public class DemoUI extends UI {
 
     private enum Type {
-        Label,
-        VerticalLayout,
-        DynamicVerticalLayout,
-        PanelWithVerticalLayout,
-        PanelWithDynamicVerticalLayout,
+        Label("Label component with some 'Lorem ipsum'"),
+        VerticalLayout("VerticalLayout with one Label in it."),
+        DynamicVerticalLayout("DynamicVerticalLayout with one Label in it."),
+        PanelWithVerticalLayout("Panel with VerticalLayout content with one Label in it."),
+        PanelWithDynamicVerticalLayout("Panel with DynamicVerticalLayout with one Label in it."), ;
+
+        private String desc;
+
+        private Type(String desc) {
+            this.desc = desc;
+        }
+
+        public String getDescription() {
+            return desc;
+        }
     }
 
     private final LayoutClickListener layoutClickListener = new LayoutClickListener() {
@@ -78,24 +90,43 @@ public class DemoUI extends UI {
     protected void init(VaadinRequest request) {
 
         VerticalLayout main = new VerticalLayout();
+        main.setMargin(true);
+        main.setSizeFull();
 
-        main.addComponent(createToolbar());
+        Component tools = createToolbar();
+        Label instructions = new Label(getInstructions(), ContentMode.HTML);
 
-        Window win = createWindow("VerticalLayout");
+        main.addComponent(tools);
+        main.addComponent(instructions);
+        main.setExpandRatio(instructions, 1);
+        main.setComponentAlignment(instructions, Alignment.BOTTOM_LEFT);
+
+        Window win = createWindow("Window content: VerticalLayout");
         win.setContent(createNormalVerticalLayout());
         addWin(win);
 
-        win = createWindow("DynamicVerticalLayout");
+        win = createWindow("Window content: DynamicVerticalLayout");
         win.setContent(createDynamicVerticalLayout());
         addWin(win);
 
         setContent(main);
     }
 
+    private String getInstructions() {
+        String htmlInstructions = null;
+        try {
+            htmlInstructions = IOUtils.toString(DemoUI.class
+                    .getResourceAsStream("/introduction.html"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return htmlInstructions;
+    }
+
     private Component createToolbar() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setWidth(100, Unit.PERCENTAGE);
-        layout.setCaption("You can drag elements from here:");
+        layout.setCaption("You can drag&drop new components into the Window from here:");
 
         addDragBoxes(layout);
 
@@ -114,6 +145,7 @@ public class DemoUI extends UI {
     private DragAndDropWrapper createDragBox(Type type) {
         Label dragElement = new Label("<a href='javascript:void'>"
                 + type.name() + "</a>", ContentMode.HTML);
+        dragElement.setDescription(type.getDescription());
         dragElement.setHeight(50, Unit.PIXELS);
         dragElement.setWidth(100, Unit.PERCENTAGE);
         dragElement.setData(type);
@@ -124,24 +156,21 @@ public class DemoUI extends UI {
 
     private void addWin(Window w) {
         addWindow(w);
-        int p = 100 / getWindows().size();
-        int width = new BigDecimal(p).divide(new BigDecimal(100.0))
-                .multiply(new BigDecimal(getPage().getBrowserWindowWidth()))
-                .intValue();
+        int widthPixels = new BigDecimal(getPage().getBrowserWindowWidth())
+                .divide(new BigDecimal(getWindows().size())).intValue();
         int x = 0;
         for (Window win : getWindows()) {
-            win.setWidth(p - 1, Unit.PERCENTAGE);
-            win.setPositionX(x + 5);
-            x += width;
+            win.setPositionX((int) ((widthPixels - win.getWidth()) / 2) + x + 5);
+            x += widthPixels;
         }
     }
 
     private Window createWindow(String caption) {
         Window window = new Window(caption);
         window.addStyleName("win");
-        window.setWidth(70, Unit.PERCENTAGE);
-        window.setHeight(70, Unit.PERCENTAGE);
-        window.setPositionY(50);
+        window.setWidth(400, Unit.PIXELS);
+        window.setHeight(300, Unit.PIXELS);
+        window.setPositionY(75);
         window.setClosable(false);
         return window;
     }

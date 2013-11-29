@@ -41,6 +41,13 @@ public class DynamicVerticalLayout extends VerticalLayout {
     public DynamicVerticalLayout() {
     }
 
+    /**
+     * Sets the target component's slot to update it's min-height automatically
+     * to the target component's required height.
+     * 
+     * @param target
+     *            Target component in the layout.
+     */
     public void setDynamicMinHeightFor(Component target) {
         if (target == null || isDynamicMinHeight(target)) {
             return;
@@ -51,6 +58,12 @@ public class DynamicVerticalLayout extends VerticalLayout {
                 .setDynamicMinHeightFor(target);
     }
 
+    /**
+     * Disable target component's slot's automatic min-height calculation.
+     * 
+     * @param target
+     *            TArget Component
+     */
     public void removeDynamicMinHeightFor(Component target) {
         if (target == null || !isDynamicMinHeight(target)) {
             return;
@@ -61,6 +74,14 @@ public class DynamicVerticalLayout extends VerticalLayout {
                 .removeDynamicMinHeightFor(target);
     }
 
+    /**
+     * Returns true if this layout contains the target component and it is set
+     * to update slot's min-height automatically.
+     * 
+     * @param target
+     *            Target Component
+     * @return
+     */
     public boolean isDynamicMinHeight(Component target) {
         return dynamicMinHeights.contains(target);
     }

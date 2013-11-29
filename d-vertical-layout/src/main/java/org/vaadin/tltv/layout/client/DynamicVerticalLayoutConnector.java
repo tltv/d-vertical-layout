@@ -27,6 +27,12 @@ import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 
+/**
+ * Connector for DynamicVerticalLayout.
+ * 
+ * @author Tltv
+ * 
+ */
 @Connect(value = DynamicVerticalLayout.class, loadStyle = LoadStyle.EAGER)
 public class DynamicVerticalLayoutConnector extends
         AbstractOrderedLayoutConnector {
